@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  challenge:
+    container_name: shippify-backend-challenge-app
+    depends_on:
+      - db
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    command: sh -c './wait-for.sh -t 640 db:3306 -- npm run dev'
+    environment:
+      - 'DATABASE_URL=mysql://root:1234@db:3306/ShippifyChallenge?connect_timeout=300'
+  db:
+    image: mysql:8.0.28-oracle
+    command: --default-authentication-plugin=mysql_native_password
+    expose:
+      - 3306
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=1234'

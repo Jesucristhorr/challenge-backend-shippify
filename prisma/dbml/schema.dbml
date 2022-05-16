@@ -1,0 +1,87 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  firstName String [not null]
+  lastName String [not null]
+  charges Charge [not null]
+  summaries Summary [not null]
+  visits UserVisit [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table UserVisit {
+  id Int [pk, increment]
+  userId Int [not null]
+  user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Charge {
+  id Int [pk, increment]
+  amount Decimal [not null]
+  userId Int [not null]
+  user User [not null]
+  lastEventId Int [not null]
+  lastEvent Event [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Sucursal {
+  id Int [pk, increment]
+  name String [not null]
+  events Event [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Event {
+  id Int [pk, increment]
+  typeId Int [not null]
+  type EventType [not null]
+  sucursalId Int [not null]
+  sucursal Sucursal [not null]
+  charges Charge [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table EventType {
+  id Int [pk, increment]
+  name String [unique, not null]
+  events Event [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Summary {
+  id Int [pk, increment]
+  basePrice Decimal [not null]
+  insurance Decimal [not null]
+  services Decimal [not null]
+  commissions Decimal [not null]
+  iva Decimal [not null]
+  otherValues Decimal [not null]
+  finalValue Decimal [not null]
+  userId Int [not null]
+  user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Ref: UserVisit.userId > User.id
+
+Ref: Charge.userId > User.id
+
+Ref: Charge.lastEventId > Event.id
+
+Ref: Event.typeId > EventType.id
+
+Ref: Event.sucursalId > Sucursal.id
+
+Ref: Summary.userId > User.id

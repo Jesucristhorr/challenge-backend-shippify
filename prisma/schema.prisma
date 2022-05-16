@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  charges Charge[]
+  summaries Summary[]
+  visits UserVisit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserVisit {
+  id Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Charge {
+  id Int @id @default(autoincrement())
+  amount Decimal @db.Decimal(16, 2)
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  lastEventId Int
+  lastEvent Event @relation(fields: [lastEventId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Sucursal {
+  id Int @id @default(autoincrement())
+  name String
+  events Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id Int @id @default(autoincrement())
+  typeId Int
+  type EventType @relation(fields: [typeId], references: [id])
+  sucursalId Int
+  sucursal Sucursal @relation(fields: [sucursalId], references: [id])
+  charges Charge[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EventType {
+  id Int @id @default(autoincrement())
+  name String @unique
+  events Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Summary {
+  id Int @id @default(autoincrement())
+  basePrice Decimal @db.Decimal(16, 2)
+  insurance Decimal @db.Decimal(16, 2)
+  services Decimal @db.Decimal(16, 2)
+  commissions Decimal @db.Decimal(16, 2)
+  iva Decimal @db.Decimal(16, 2)
+  otherValues Decimal @db.Decimal(16, 2)
+  finalValue Decimal @db.Decimal(16, 2)
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
