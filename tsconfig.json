@@ -15,7 +15,6 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
-    "types": ["reflect-metadata"],
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
